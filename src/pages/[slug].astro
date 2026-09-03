@@ -1,9 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
-import CalculatorLayout from "../components/CalculatorLayout.astro";
-import FAQSection from "../components/FAQSection.astro";
-import PageIntro from "../components/PageIntro.astro";
-import { calculatorThemes } from "../data/calculatorThemes";
+import CalculatorLayout from "@/components/CalculatorLayout.astro";
+import FAQSection from "@/components/FAQSection.astro";
+import PageIntro from "@/components/PageIntro.astro";
+import { calculatorThemes } from "@/data/calculatorThemes";
 
 export async function getStaticPaths() {
   const calculators = await getCollection("calculators");

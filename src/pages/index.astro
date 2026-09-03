@@ -1,12 +1,13 @@
 ---
 import { getCollection } from "astro:content";
-import SEO from "../components/SEO.astro";
-import FAQSection from "../components/FAQSection.astro";
-import AdSlot from "../components/AdSlot.astro";
-import Cards from "../components/Cards.astro";
-import HomeBenefits from "../components/HomeBenefits.astro";
-import PageIntro from "../components/PageIntro.astro";
-import { cardDetails, homeFaqs } from "../data/homeContent";
+import SEO from "@/components/SEO.astro";
+import Header from "@/components/Header.astro";
+import FAQSection from "@/components/FAQSection.astro";
+import AdSlot from "@/components/AdSlot.astro";
+import Cards from "@/components/Cards.astro";
+import HomeBenefits from "@/components/HomeBenefits.astro";
+import PageIntro from "@/components/PageIntro.astro";
+import { cardDetails, homeFaqs } from "@/data/homeContent";
 
 const calculators = await getCollection("calculators");
 ---
@@ -47,20 +48,7 @@ const calculators = await getCollection("calculators");
     />
   </head>
   <body class="min-h-screen bg-slate-50 font-sans text-slate-800">
-    <header class="border-b border-slate-200 bg-white">
-      <nav
-        class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4"
-        aria-label="Navegación principal"
-      >
-        <a href="/" class="text-xl font-extrabold tracking-tight text-slate-900"
-          >CALCULA<span class="text-blue-600">.ES</span></a
-        >
-        <span
-          class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"
-          >Actualizado 2026</span
-        >
-      </nav>
-    </header>
+    <Header />
 
     <main class="mx-auto max-w-6xl px-4 py-10 sm:py-14">
       <section
