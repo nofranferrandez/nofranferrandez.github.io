@@ -15,18 +15,29 @@
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "Simulador de Paro 2026",
-            "url": "https://nofranferrandez.github.io/herramientas/paro.html",
-            "description": "Calcula cuánto vas a cobrar de paro y durante cuántos meses según tu tiempo cotizado y base reguladora. Sin registro ni certificado.",
-            "applicationCategory": "FinanceApplication",
-            "operatingSystem": "All",
-            "browserRequirements": "Requires JavaScript",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR"
-            }
+            "@graph": [
+                {
+                    "@type": "WebApplication",
+                    "name": "Simulador de Paro 2026",
+                    "url": "https://nofranferrandez.github.io/herramientas/paro.html",
+                    "description": "Calcula cuánto vas a cobrar de paro y durante cuántos meses según tu tiempo cotizado y base reguladora. Sin registro ni certificado.",
+                    "applicationCategory": "FinanceApplication",
+                    "operatingSystem": "All",
+                    "browserRequirements": "Requires JavaScript",
+                    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+                },
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [{
+                        "@type": "Question",
+                        "name": "¿Cómo se calcula la prestación por desempleo en España?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "La cuantía de la prestación contributiva por desempleo depende de la base reguladora media de tus cotizaciones a la Seguridad Social durante los últimos 180 días trabajados (excluyendo las horas extraordinarias). Durante los primeros 180 días (6 meses) se cobra el 70% de la base reguladora. A partir del día 181, se cobra el 60% de dicha base. Las cuantías resultantes están sujetas a límites mínimos y máximos según las cargas familiares."
+                        }
+                    }]
+                }
+            ]
         }
         </script>
     <!-- Tailwind CSS desde CDN -->

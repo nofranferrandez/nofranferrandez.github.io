@@ -15,18 +15,29 @@
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "Calculadora IRPF 2026",
-            "url": "https://nofranferrandez.github.io/herramientas/irpf.html",
-            "description": "Calcula de forma rápida y sencilla tu sueldo neto y retención de IRPF estimada para tu nómina. Sin registros ni certificados.",
-            "applicationCategory": "FinanceApplication",
-            "operatingSystem": "All",
-            "browserRequirements": "Requires JavaScript",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR"
-            }
+            "@graph": [
+                {
+                    "@type": "WebApplication",
+                    "name": "Calculadora IRPF 2026",
+                    "url": "https://nofranferrandez.github.io/herramientas/irpf.html",
+                    "description": "Calcula de forma rápida y sencilla tu sueldo neto y retención de IRPF estimada para tu nómina. Sin registros ni certificados.",
+                    "applicationCategory": "FinanceApplication",
+                    "operatingSystem": "All",
+                    "browserRequirements": "Requires JavaScript",
+                    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+                },
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [{
+                        "@type": "Question",
+                        "name": "¿Cómo se calcula la retención del IRPF en España?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "La retención del IRPF (Impuesto sobre la Renta de las Personas Físicas) es un anticipo que el trabajador hace a Hacienda a cuenta de su declaración de la renta final. Las empresas aplican un porcentaje sobre la nómina en función de la cuantía del salario bruto y las circunstancias personales y familiares del empleado. Aviso legal: Esta herramienta ofrece una estimación basada en los tramos estatales orientativos de IRPF y las cotizaciones a la Seguridad Social general. No constituye asesoramiento fiscal oficial ni sustituye los cálculos finales de la Agencia Tributaria o de tu departamento de RRHH."
+                        }
+                    }]
+                }
+            ]
         }
         </script>
     <!-- Tailwind CSS desde CDN para prototipado rápido -->

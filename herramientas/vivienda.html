@@ -15,18 +15,29 @@
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "Calculadora de Gastos de Hipoteca y Vivienda 2026",
-            "url": "https://nofranferrandez.github.io/herramientas/vivienda.html",
-            "description": "Calcula los gastos de notaría, registro, gestoría e impuestos (ITP, IVA, AJD) para comprar tu casa de segunda mano u obra nueva. Sin registros.",
-            "applicationCategory": "FinanceApplication",
-            "operatingSystem": "All",
-            "browserRequirements": "Requires JavaScript",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR"
-            }
+            "@graph": [
+                {
+                    "@type": "WebApplication",
+                    "name": "Calculadora de Gastos de Hipoteca y Vivienda 2026",
+                    "url": "https://nofranferrandez.github.io/herramientas/vivienda.html",
+                    "description": "Calcula los gastos de notaría, registro, gestoría e impuestos (ITP, IVA, AJD) para comprar tu casa de segunda mano u obra nueva. Sin registros.",
+                    "applicationCategory": "FinanceApplication",
+                    "operatingSystem": "All",
+                    "browserRequirements": "Requires JavaScript",
+                    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+                },
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [{
+                        "@type": "Question",
+                        "name": "¿Cuántos ahorros extras necesitas para comprar una casa?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Al comprar una vivienda en España, debes calcular entre un 10% y un 12% adicional sobre el precio del inmueble para cubrir impuestos y gastos de gestión (sin contar la entrada de la hipoteca, que suele ser el 20%). En viviendas de segunda mano se paga el ITP (entre el 4% y el 10% según la CCAA). En vivienda nueva, se abona el 10% de IVA más el Impuesto de Actos Jurídicos Documentados (AJD)."
+                        }
+                    }]
+                }
+            ]
         }
         </script>
     <!-- Tailwind CSS desde CDN -->

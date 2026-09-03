@@ -15,18 +15,29 @@
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "Calculadora de Pensión de Jubilación 2026",
-            "url": "https://nofranferrandez.github.io/herramientas/pension.html",
-            "description": "Calcula la estimación de tu pensión pública de jubilación de la Seguridad Social según tus años cotizados y tu base reguladora. Sin registros.",
-            "applicationCategory": "FinanceApplication",
-            "operatingSystem": "All",
-            "browserRequirements": "Requires JavaScript",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR"
-            }
+            "@graph": [
+                {
+                    "@type": "WebApplication",
+                    "name": "Calculadora de Pensión de Jubilación 2026",
+                    "url": "https://nofranferrandez.github.io/herramientas/pension.html",
+                    "description": "Calcula la estimación de tu pensión pública de jubilación de la Seguridad Social según tus años cotizados y tu base reguladora. Sin registros.",
+                    "applicationCategory": "FinanceApplication",
+                    "operatingSystem": "All",
+                    "browserRequirements": "Requires JavaScript",
+                    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+                },
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [{
+                        "@type": "Question",
+                        "name": "¿Cómo se calcula la pensión de jubilación en 2026?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "En 2026, el cálculo de la base reguladora toma en cuenta las bases de cotización de los últimos 25 años (300 meses divididos entre 350). Con 15 años cotizados (el mínimo legal) se obtiene el 50% de la base reguladora. Para alcanzar el 100% de la pensión, se exige haber cotizado al menos 36 años y 6 meses."
+                        }
+                    }]
+                }
+            ]
         }
         </script>
     <!-- Tailwind CSS desde CDN -->

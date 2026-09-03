@@ -1,0 +1,38 @@
+{
+  "name": "AI Autonomous SEO Optimizer (Level 5)",
+  "on": {
+    "schedule": [
+      { "cron": "0 3 * * *" }
+    ],
+    "workflow_dispatch": {}
+  },
+  "jobs": {
+    "optimize": {
+      "runs-on": "ubuntu-latest",
+      "permissions": {
+        "contents": "write"
+      },
+      "steps": [
+        {
+          "name": "Checkout Código",
+          "uses": "actions/checkout@v4"
+        },
+        {
+          "name": "Configurar Python",
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.11"
+          }
+        },
+        {
+          "name": "Obtener Métricas de Rendimiento",
+          "run": "python scripts/fetch_metrics.py"
+        },
+        {
+          "name": "Guardar cambios si hay optimizaciones",
+          "run": "git config user.name \"AI-Optimizer-Bot\"\ngit config user.email \"bot@calcula.es\"\ngit add data/latest_metrics.json\nif git diff --cached --quiet; then\n  echo \"No hay cambios que guardar.\"\nelse\n  git commit -m \"auto(seo): actualizar métricas SEO\"\n  git push\nfi"
+        }
+      ]
+    }
+  }
+}

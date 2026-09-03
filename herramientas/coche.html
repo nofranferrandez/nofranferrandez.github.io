@@ -15,18 +15,29 @@
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "Calculadora Cambio de Nombre Coche 2026",
-            "url": "https://nofranferrandez.github.io/herramientas/coche.html",
-            "description": "Calcula cuánto cuesta transferir un coche, moto o vehículo de segunda mano en España: Tasas DGT e Impuesto ITP por Comunidad Autónoma.",
-            "applicationCategory": "UtilitiesApplication",
-            "operatingSystem": "All",
-            "browserRequirements": "Requires JavaScript",
-            "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR"
-            }
+            "@graph": [
+                {
+                    "@type": "WebApplication",
+                    "name": "Calculadora Cambio de Nombre Coche 2026",
+                    "url": "https://nofranferrandez.github.io/herramientas/coche.html",
+                    "description": "Calcula cuánto cuesta transferir un coche, moto o vehículo de segunda mano en España: Tasas DGT e Impuesto ITP por Comunidad Autónoma.",
+                    "applicationCategory": "UtilitiesApplication",
+                    "operatingSystem": "All",
+                    "browserRequirements": "Requires JavaScript",
+                    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+                },
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [{
+                        "@type": "Question",
+                        "name": "¿Qué documentación necesitas para cambiar de nombre un coche?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Para realizar la transferencia de un vehículo de segunda mano en la DGT debes aportar el contrato de compraventa firmado, fotocopia del DNI del vendedor, DNI del comprador, la ficha técnica del vehículo y el permiso de circulación. Recuerda abonar primero el Impuesto de Transmisiones Patrimoniales (Modelo 620 o 621) en la Hacienda de tu Comunidad Autónoma antes de solicitar la cita en la DGT o tramitarlo online."
+                        }
+                    }]
+                }
+            ]
         }
         </script>
     <!-- Tailwind CSS desde CDN -->
