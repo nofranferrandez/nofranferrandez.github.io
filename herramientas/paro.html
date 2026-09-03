@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Simulador de Paro 2026 | Calcula tu Prestación por Desempleo</title>
+    <meta name="description" content="Calcula cuánto vas a cobrar de paro y durante cuántos meses según tu tiempo cotizado y base reguladora. Sin registro ni certificado.">
+        <link rel="canonical" href="https://nofranferrandez.github.io/herramientas/paro.html">
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="es_ES">
+        <meta property="og:title" content="Simulador de Paro 2026 | Prestación por Desempleo">
+        <meta property="og:description" content="Calcula el importe mensual y la duración estimada de tu prestación por desempleo.">
+        <meta property="og:url" content="https://nofranferrandez.github.io/herramientas/paro.html">
+        <meta name="twitter:card" content="summary">
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Simulador de Paro 2026",
+            "url": "https://nofranferrandez.github.io/herramientas/paro.html",
+            "description": "Calcula cuánto vas a cobrar de paro y durante cuántos meses según tu tiempo cotizado y base reguladora. Sin registro ni certificado.",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+            }
+        }
+        </script>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Navbar -->
+    <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-10">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-emerald-600 text-white w-8 h-8 rounded-lg font-black flex items-center justify-center text-base">€</div>
+                <span class="font-bold text-base text-slate-900 tracking-tight">CalculaTuParo</span>
+            </div>
+            <span class="text-[10px] bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded-full border border-slate-200">SEPE 2026</span>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-md mx-auto px-4 py-6 w-full flex-grow space-y-5">
+
+        <div class="text-center">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-1">Simulador de Prestación por Desempleo</h1>
+            <p class="text-xs sm:text-sm text-slate-500">Calcula el importe mensual y los meses de paro que te corresponden en menos de 1 minuto.</p>
+        </div>
+
+        <!-- ESPACIO ANUNCIO: Banner Superior (AdSense) -->
+        <div class="w-full bg-slate-200/70 border border-dashed border-slate-300 rounded-xl p-3 text-center text-[11px] text-slate-400 min-h-[70px] flex items-center justify-center">
+            [ Anuncio Google AdSense Header ]
+        </div>
+
+        <!-- Formulario -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <h2 class="text-sm font-bold text-slate-900 border-b pb-2 uppercase tracking-wider text-slate-500">Datos de Cotización</h2>
+
+            <div>
+                <label for="baseCotizacion" class="block text-xs font-bold text-slate-700 uppercase mb-1">Base Reguladora Media (€/mes)</label>
+                <div class="relative">
+                    <input type="number" id="baseCotizacion" inputmode="decimal" placeholder="Ej. 1850" class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-3 pr-8 py-3 text-base font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <span class="absolute right-3 top-3 text-slate-400 font-bold text-sm">€</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">Media de la base de cotización de contingencias profesionales de los últimos 180 días (aparece en tu nómina).</p>
+            </div>
+
+            <div>
+                <label for="mesesCotizados" class="block text-xs font-bold text-slate-700 uppercase mb-1">Tiempo Cotizado (últimos 6 años)</label>
+                <select id="mesesCotizados" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="360">De 1 año a 1 año y medio (360 - 539 días)</option>
+                    <option value="540">De 1 año y medio a 2 años (540 - 719 días)</option>
+                    <option value="720">De 2 años a 2 años y medio (720 - 899 días)</option>
+                    <option value="900">De 2 años y medio a 3 años (900 - 1079 días)</option>
+                    <option value="1080">De 3 años a 3 años y medio (1080 - 1259 días)</option>
+                    <option value="1260">De 3 años y medio a 4 años (1260 - 1439 días)</option>
+                    <option value="1440">De 4 años a 4 años y medio (1440 - 1619 días)</option>
+                    <option value="1620">De 4 años y medio a 5 años (1620 - 1799 días)</option>
+                    <option value="1800">De 5 años a 5 años y medio (1800 - 1979 días)</option>
+                    <option value="1980">De 5 años y medio a 6 años (1980 - 2159 días)</option>
+                    <option value="2160" selected>Más de 6 años cotizados (2160+ días)</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="hijos" class="block text-xs font-bold text-slate-700 uppercase mb-1">Hijos a Cargo (&lt; 26 años)</label>
+                <select id="hijos" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="0" selected>Sin hijos a cargo</option>
+                    <option value="1">1 hijo a cargo</option>
+                    <option value="2">2 o más hijos a cargo</option>
+                </select>
+            </div>
+
+            <button onclick="calcularParo()" class="w-full bg-emerald-600 active:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition shadow-md active:scale-[0.98] mt-2">
+                Calcular Mi Prestación
+            </button>
+        </div>
+
+        <!-- Tarjeta de Resultados -->
+        <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-lg border border-slate-800 space-y-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800 pb-2">Resultado del Cálculo</h2>
+
+            <div class="grid grid-cols-2 gap-3 text-center border-b border-slate-800 pb-3">
+                <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold block">Primeros 6 meses</span>
+                    <span id="resFase1" class="text-xl font-extrabold text-emerald-400 mt-0.5 block">0,00 €/mes</span>
+                    <span class="text-[9px] text-slate-500 block">(70% de la base)</span>
+                </div>
+                <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold block">A partir del mes 7</span>
+                    <span id="resFase2" class="text-xl font-extrabold text-teal-300 mt-0.5 block">0,00 €/mes</span>
+                    <span class="text-[9px] text-slate-500 block">(60% de la base)</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center px-1">
+                <span class="text-xs text-slate-300 font-medium">Duración del derecho:</span>
+                <span id="resDuracion" class="text-base font-extrabold text-white bg-slate-800 px-3 py-1 rounded-lg border border-slate-700">0 meses</span>
+            </div>
+
+            <div id="resAvisoTope" class="hidden text-[11px] text-amber-300/90 bg-amber-950/40 p-2.5 rounded-lg border border-amber-800/50">
+                ⚠️ El importe ha sido ajustado por los topes mínimos/máximos legales fijados según tus hijos a cargo.
+            </div>
+        </div>
+
+        <!-- ESPACIO ANUNCIO: Banner In-Content (AdSense) -->
+        <div class="w-full bg-slate-200/70 border border-dashed border-slate-300 rounded-xl p-4 text-center text-[11px] text-slate-400 min-h-[200px] flex items-center justify-center">
+            [ Anuncio Google AdSense Contenido ]
+        </div>
+
+        <!-- Bloque SEO -->
+        <article class="bg-white p-5 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-2.5">
+            <h3 class="text-sm font-bold text-slate-900">¿Cómo se calcula la prestación por desempleo en España?</h3>
+            <p>La cuantía de la prestación contributiva por desempleo depende de la **base reguladora media** de tus cotizaciones a la Seguridad Social durante los últimos 180 días trabajados (excluyendo las horas extraordinarias).</p>
+            <p>Durante los primeros **180 días (6 meses)** se cobra el **70%** de la base reguladora. A partir del **día 181**, se cobra el **60%** de dicha base. Las cuantías resultantes están sujetas a límites mínimos y máximos según las cargas familiares.</p>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-[11px] text-slate-400">
+        <p>© 2026 CalculaTuParo. Herramienta de estimación no oficial.</p>
+    </footer>
+
+    <!-- Lógica de Cálculo SEPE -->
+    <script>
+        function calcularParo() {
+            const base = parseFloat(document.getElementById('baseCotizacion').value);
+            const diasCotizados = parseInt(document.getElementById('mesesCotizados').value);
+            const hijos = parseInt(document.getElementById('hijos').value);
+
+            if (!base || base <= 0) {
+                alert("Por favor, introduce una base de cotización válida.");
+                return;
+            }
+
+            // 1. Duración del paro según días cotizados (Escala oficial SEPE)
+            let mesesDerecho = 0;
+            if (diasCotizados >= 2160) mesesDerecho = 24;
+            else if (diasCotizados >= 1980) mesesDerecho = 22;
+            else if (diasCotizados >= 1800) mesesDerecho = 20;
+            else if (diasCotizados >= 1620) mesesDerecho = 18;
+            else if (diasCotizados >= 1440) mesesDerecho = 16;
+            else if (diasCotizados >= 1260) mesesDerecho = 14;
+            else if (diasCotizados >= 1080) mesesDerecho = 12;
+            else if (diasCotizados >= 900) mesesDerecho = 10;
+            else if (diasCotizados >= 720) mesesDerecho = 8;
+            else if (diasCotizados >= 540) mesesDerecho = 6;
+            else if (diasCotizados >= 360) mesesDerecho = 4;
+
+            // 2. Cálculo de cuantía teórica
+            let brutoFase1 = base * 0.70; // Primeros 180 días
+            let brutoFase2 = base * 0.60; // A partir del día 181
+
+            // 3. Aplicación de Topes IPREM (Valores orientativos 2026)
+            // Mínimos: Sin hijos (560 €), Con hijos (749 €)
+            // Máximos: Sin hijos (1225 €), 1 hijo (1400 €), 2+ hijos (1575 €)
+            let topeMinimo = (hijos === 0) ? 560.00 : 749.00;
+            let topeMaximo = 1225.00;
+            if (hijos === 1) topeMaximo = 1400.00;
+            if (hijos >= 2) topeMaximo = 1575.00;
+
+            let netoFase1 = Math.min(Math.max(brutoFase1, topeMinimo), topeMaximo);
+            let netoFase2 = Math.min(Math.max(brutoFase2, topeMinimo), topeMaximo);
+
+            // Si la prestación calculada supera o no llega a los topes, mostramos el aviso
+            const hayTope = (brutoFase1 !== netoFase1) || (brutoFase2 !== netoFase2);
+
+            // 4. Renderizar resultados
+            document.getElementById('resFase1').innerText = netoFase1.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) + '/mes';
+            document.getElementById('resFase2').innerText = netoFase2.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) + '/mes';
+            document.getElementById('resDuracion').innerText = mesesDerecho + ' meses';
+
+            const aviso = document.getElementById('resAvisoTope');
+            if (hayTope) {
+                aviso.classList.remove('hidden');
+            } else {
+                aviso.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

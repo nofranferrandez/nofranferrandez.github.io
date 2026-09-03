@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculadora de Gastos de Hipoteca y Vivienda 2026 | CalculaGastosVivienda</title>
+    <meta name="description" content="Calcula los gastos de notaría, registro, gestoría e impuestos (ITP, IVA, AJD) para comprar tu casa de segunda mano u obra nueva. Sin registros.">
+        <link rel="canonical" href="https://nofranferrandez.github.io/herramientas/vivienda.html">
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="es_ES">
+        <meta property="og:title" content="Calculadora de Gastos de Hipoteca y Vivienda 2026">
+        <meta property="og:description" content="Calcula los gastos e impuestos de comprar una vivienda de segunda mano u obra nueva.">
+        <meta property="og:url" content="https://nofranferrandez.github.io/herramientas/vivienda.html">
+        <meta name="twitter:card" content="summary">
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Calculadora de Gastos de Hipoteca y Vivienda 2026",
+            "url": "https://nofranferrandez.github.io/herramientas/vivienda.html",
+            "description": "Calcula los gastos de notaría, registro, gestoría e impuestos (ITP, IVA, AJD) para comprar tu casa de segunda mano u obra nueva. Sin registros.",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR"
+            }
+        }
+        </script>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Navbar -->
+    <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-10">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <div class="bg-blue-600 text-white w-8 h-8 rounded-lg font-black flex items-center justify-center text-base">🏠</div>
+                <span class="font-bold text-base text-slate-900 tracking-tight">CalculaGastosVivienda</span>
+            </a>
+            <span class="text-[10px] bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded-full border border-slate-200">2026</span>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-md mx-auto px-4 py-6 w-full flex-grow space-y-5">
+
+        <div class="text-center">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-1">Gastos de Compra de Vivienda</h1>
+            <p class="text-xs sm:text-sm text-slate-500">Averigua el dinero extra de ahorro que necesitas para impuestos, notario y gestoría.</p>
+        </div>
+
+        <!-- ESPACIO ANUNCIO: Banner Superior -->
+        <div class="w-full bg-slate-200/70 border border-dashed border-slate-300 rounded-xl p-3 text-center text-[11px] text-slate-400 min-h-[70px] flex items-center justify-center">
+            [ Anuncio Google AdSense Header ]
+        </div>
+
+        <!-- Formulario -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <h2 class="text-sm font-bold text-slate-900 border-b pb-2 uppercase tracking-wider text-slate-500">Datos de la Inmueble</h2>
+
+            <div>
+                <label for="precio" class="block text-xs font-bold text-slate-700 uppercase mb-1">Precio de la Vivienda (€)</label>
+                <div class="relative">
+                    <input type="number" id="precio" inputmode="decimal" placeholder="Ej. 180000" class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-3 pr-8 py-3 text-base font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span class="absolute right-3 top-3 text-slate-400 font-bold text-sm">€</span>
+                </div>
+            </div>
+
+            <div>
+                <label for="tipoVivienda" class="block text-xs font-bold text-slate-700 uppercase mb-1">Estado de la Vivienda</label>
+                <select id="tipoVivienda" onchange="toggleBonificacionJoven()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="segunda_mano" selected>Segunda Mano (Sujeta a ITP)</option>
+                    <option value="obra_nueva">Obra Nueva (Sujeta a IVA + AJD)</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="ccaa" class="block text-xs font-bold text-slate-700 uppercase mb-1">Comunidad Autónoma</label>
+                <select id="ccaa" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="8">Andalucía (8%)</option>
+                    <option value="8">Aragón (8%)</option>
+                    <option value="10">Asturias (10%)</option>
+                    <option value="8">Baleares (8%)</option>
+                    <option value="6.5">Canarias (6.5%)</option>
+                    <option value="10">Cantabria (10%)</option>
+                    <option value="8">Castilla-La Mancha (8%)</option>
+                    <option value="8">Castilla y León (8%)</option>
+                    <option value="10">Cataluña (10%)</option>
+                    <option value="10" selected>Comunidad Valenciana (10%)</option>
+                    <option value="6">Extremadura (8%)</option>
+                    <option value="10">Galicia (8%)</option>
+                    <option value="6">Madrid (6%)</option>
+                    <option value="8">Murcia (8%)</option>
+                    <option value="6">Navarra (6%)</option>
+                    <option value="7">La Rioja (7%)</option>
+                    <option value="4">País Vasco (4%)</option>
+                </select>
+            </div>
+
+            <div id="wrapperJoven" class="flex items-center gap-2 pt-1">
+                <input type="checkbox" id="joven" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                <label for="joven" class="text-xs text-slate-700 font-medium">Menor de 35 años (Aplicar tipo bonificado de ITP si aplica)</label>
+            </div>
+
+            <button onclick="calcularGastos()" class="w-full bg-blue-600 active:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-md active:scale-[0.98] mt-2">
+                Calcular Gastos Totales
+            </button>
+        </div>
+
+        <!-- Tarjeta de Resultados -->
+        <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-lg border border-slate-800 space-y-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800 pb-2">Desglose de Gastos de Compra</h2>
+
+            <div class="text-center py-1">
+                <span class="text-xs text-slate-400 uppercase tracking-wider block font-semibold">Gastos Adicionales Totales</span>
+                <div id="resTotal" class="text-3xl font-black text-emerald-400 mt-1">0,00 €</div>
+                <span id="resPorcentaje" class="text-[11px] text-slate-400">Representa un 0.0% adicional sobre la vivienda</span>
+            </div>
+
+            <div class="space-y-2 border-t border-slate-800 pt-3 text-xs text-slate-300">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400" id="resLabelImpuesto">Impuestos (ITP):</span>
+                    <span id="resImpuesto" class="font-bold text-blue-300">0,00 €</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Notaría (Estimado):</span>
+                    <span id="resNotaria" class="font-bold text-slate-200">0,00 €</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Registro de la Propiedad:</span>
+                    <span id="resRegistro" class="font-bold text-slate-200">0,00 €</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Gestoría Comercial:</span>
+                    <span id="resGestoria" class="font-bold text-slate-200">0,00 €</span>
+                </div>
+            </div>
+
+            <!-- LeadGen / Afiliación Bancaria -->
+            <div class="mt-4 pt-3 border-t border-slate-800/80 bg-slate-800/60 -mx-2 p-3 rounded-xl text-xs">
+                <p class="text-blue-300 font-bold mb-1">¿Buscas la mejor hipoteca para esta vivienda?</p>
+                <p class="text-slate-400 text-[11px] mb-2">Compara tipos fijos y mixtos sin vinculaciones abusivas.</p>
+                <a href="#" class="inline-block bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] hover:bg-blue-500 transition">Comparar Hipotecas Gratis &rarr;</a>
+            </div>
+        </div>
+
+        <!-- ESPACIO ANUNCIO: Banner In-Content -->
+        <div class="w-full bg-slate-200/70 border border-dashed border-slate-300 rounded-xl p-4 text-center text-[11px] text-slate-400 min-h-[200px] flex items-center justify-center">
+            [ Anuncio Google AdSense Contenido ]
+        </div>
+
+        <!-- Texto SEO -->
+        <article class="bg-white p-5 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-2.5">
+            <h3 class="text-sm font-bold text-slate-900">¿Cuántos ahorros extras necesitas para comprar una casa?</h3>
+            <p>Al comprar una vivienda en España, debes calcular entre un **10% y un 12% adicional** sobre el precio del inmueble para cubrir impuestos y gastos de gestión (sin contar la entrada de la hipoteca, que suele ser el 20%).</p>
+            <p>En **viviendas de segunda mano** se paga el ITP (entre el 4% y el 10% según la CCAA). En **vivienda nueva**, se abona el 10% de IVA más el Impuesto de Actos Jurídicos Documentados (AJD).</p>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-[11px] text-slate-400">
+        <p>© 2026 CalculaGastosVivienda. Estimación basada en aranceles habituales.</p>
+    </footer>
+
+    <!-- Lógica JS -->
+    <script>
+        function toggleBonificacionJoven() {
+            const tipo = document.getElementById('tipoVivienda').value;
+            const wrapper = document.getElementById('wrapperJoven');
+            if (tipo === 'obra_nueva') {
+                wrapper.classList.add('hidden');
+            } else {
+                wrapper.classList.remove('hidden');
+            }
+        }
+
+        function calcularGastos() {
+            const precio = parseFloat(document.getElementById('precio').value);
+            const tipoVivienda = document.getElementById('tipoVivienda').value;
+            const tipoItpBase = parseFloat(document.getElementById('ccaa').value);
+            const esJoven = document.getElementById('joven').checked;
+
+            if (!precio || precio <= 0) {
+                alert("Por favor, introduce un precio de vivienda válido.");
+                return;
+            }
+
+            let totalImpuestos = 0;
+
+            if (tipoVivienda === 'segunda_mano') {
+                let tipoEfectivo = tipoItpBase;
+                if (esJoven && tipoItpBase > 6) {
+                    tipoEfectivo = Math.max(4, tipoItpBase - 2); // Reducción bonificada para jóvenes
+                }
+                totalImpuestos = precio * (tipoEfectivo / 100);
+                document.getElementById('resLabelImpuesto').innerText = `Impuesto ITP (${tipoEfectivo}%):`;
+            } else {
+                // Obra nueva: 10% IVA + 1.5% AJD (promedio)
+                const iva = precio * 0.10;
+                const ajd = precio * 0.015;
+                totalImpuestos = iva + ajd;
+                document.getElementById('resLabelImpuesto').innerText = 'Impuestos (10% IVA + 1.5% AJD):';
+            }
+
+            // Estimación arancelaria regulada (Notaria y Registro escala sobre precio)
+            const notaria = Math.min(Math.max(precio * 0.003, 600), 1100);
+            const registro = Math.min(Math.max(precio * 0.0018, 350), 650);
+            const gestoria = 350; // Tarifa plana media de mercado
+
+            const gastosTotales = totalImpuestos + notaria + registro + gestoria;
+            const porcentajeSobrePrecio = (gastosTotales / precio) * 100;
+
+            // Renderizado de resultados
+            document.getElementById('resTotal').innerText = gastosTotales.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+            document.getElementById('resImpuesto').innerText = totalImpuestos.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+            document.getElementById('resNotaria').innerText = notaria.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+            document.getElementById('resRegistro').innerText = registro.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+            document.getElementById('resGestoria').innerText = gestoria.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+            document.getElementById('resPorcentaje').innerText = `Representa un ${porcentajeSobrePrecio.toFixed(1)}% adicional sobre la vivienda`;
+        }
+    </script>
+</body>
+</html>
