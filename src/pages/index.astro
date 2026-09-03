@@ -1,0 +1,145 @@
+---
+import { getCollection } from 'astro:content';
+import SEO from '../components/SEO.astro';
+import FAQSection from '../components/FAQSection.astro';
+import AdSlot from '../components/AdSlot.astro';
+const calculators = await getCollection('calculators');
+const cardDetails: Record<string, { icon: string; eyebrow: string; shortTitle: string; action: string; outcome: string; iconClass: string; eyebrowClass: string; blobClass: string; hoverClass: string }> = {
+  irpf: { icon: '€', eyebrow: 'Nómina · Hacienda', shortTitle: '¿Cuánto cobraré en neto?', action: 'Estimar mi sueldo', outcome: 'Retención y sueldo neto', iconClass: 'bg-blue-100 text-blue-700', eyebrowClass: 'text-blue-700', blobClass: 'bg-blue-50', hoverClass: 'hover:border-blue-300' },
+  pension: { icon: '◷', eyebrow: 'Jubilación · Seguridad Social', shortTitle: 'Planifica tu jubilación', action: 'Estimar mi pensión', outcome: 'Pensión mensual orientativa', iconClass: 'bg-emerald-100 text-emerald-700', eyebrowClass: 'text-emerald-700', blobClass: 'bg-emerald-50', hoverClass: 'hover:border-emerald-300' },
+  finiquito: { icon: '✓', eyebrow: 'Trabajo · Despido', shortTitle: 'Comprueba tu finiquito', action: 'Calcular mi liquidación', outcome: 'Finiquito e indemnización', iconClass: 'bg-amber-100 text-amber-700', eyebrowClass: 'text-amber-700', blobClass: 'bg-amber-50', hoverClass: 'hover:border-amber-300' },
+  paro: { icon: '↗', eyebrow: 'Desempleo · SEPE', shortTitle: '¿Cuánto paro me queda?', action: 'Simular mi prestación', outcome: 'Importe y meses de paro', iconClass: 'bg-violet-100 text-violet-700', eyebrowClass: 'text-violet-700', blobClass: 'bg-violet-50', hoverClass: 'hover:border-violet-300' },
+  vivienda: { icon: '⌂', eyebrow: 'Vivienda · Impuestos', shortTitle: 'Calcula los gastos de tu casa', action: 'Ver gastos de compra', outcome: 'Impuestos y gastos extra', iconClass: 'bg-rose-100 text-rose-700', eyebrowClass: 'text-rose-700', blobClass: 'bg-rose-50', hoverClass: 'hover:border-rose-300' },
+  coche: { icon: '↔', eyebrow: 'Motor · DGT', shortTitle: 'Cambia el coche de nombre', action: 'Calcular transferencia', outcome: 'ITP, DGT y gestoría', iconClass: 'bg-slate-100 text-slate-700', eyebrowClass: 'text-slate-700', blobClass: 'bg-slate-50', hoverClass: 'hover:border-slate-300' },
+};
+const homeFaqs = [
+  { question: '¿Qué puedo calcular en CALCULA.ES?', answer: 'Puedes estimar tu retención de IRPF y sueldo neto, así como tu pensión de jubilación. La plataforma se ampliará con más herramientas fiscales y laborales.' },
+  { question: '¿Las calculadoras guardan mis datos?', answer: 'No. Los cálculos se realizan en tu navegador y no necesitas registrarte ni introducir datos personales.' },
+  { question: '¿Los resultados son oficiales?', answer: 'No. Son estimaciones informativas basadas en los parámetros publicados para 2026 y no sustituyen el asesoramiento de la Agencia Tributaria, la Seguridad Social o un profesional.' },
+];
+---
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <SEO title="CALCULA | Calculadoras Fiscales y Laborales en España" description="Calculadoras gratuitas de IRPF, sueldo neto y pensión para tus decisiones fiscales y laborales en España." category="UtilitiesApplication" keywords={['calculadoras fiscales', 'calculadora IRPF', 'calculadora pensión']} faqs={homeFaqs} />
+    {import.meta.env.PUBLIC_ADSENSE_CLIENT && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.PUBLIC_ADSENSE_CLIENT}`} crossorigin="anonymous"></script>}
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen bg-slate-50 font-sans text-slate-800">
+    <header class="border-b border-slate-200 bg-white">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4" aria-label="Navegación principal">
+        <a href="/" class="text-xl font-extrabold tracking-tight text-slate-900">CALCULA<span class="text-blue-600">.ES</span></a>
+        <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Actualizado 2026</span>
+      </nav>
+    </header>
+    <main class="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+      <section class="grid items-center gap-10 lg:grid-cols-[1fr_320px]" aria-labelledby="page-title">
+        <div>
+          <p class="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-blue-600">Decisiones más claras</p>
+          <h1 id="page-title" class="max-w-3xl text-4xl font-black tracking-tight text-slate-900 sm:text-6xl">Calculadoras fiscales y laborales para España</h1>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600">Calcula tu IRPF, sueldo neto y pensión de jubilación con herramientas gratuitas, rápidas y fáciles de entender.</p>
+          <a href="#calculadoras" class="mt-7 inline-flex min-h-11 items-center rounded-lg bg-blue-600 px-5 py-3 font-bold text-white shadow-sm hover:bg-blue-700">Ver calculadoras</a>
+        </div>
+        <aside class="rounded-3xl border border-blue-100 bg-blue-50 p-6 shadow-sm" aria-label="Ventajas de las calculadoras">
+          <p class="text-xs font-bold uppercase tracking-[0.16em] text-blue-700">Tu información, bajo control</p>
+          <h2 class="mt-3 text-2xl font-black tracking-tight text-slate-900">Hechas para resolverlo rápido</h2>
+          <p class="mt-3 text-sm leading-6 text-slate-600">Una experiencia sencilla para pasar de la duda a una estimación útil en pocos pasos.</p>
+        </aside>
+      </section>
+
+      <AdSlot slot="home-top" format="horizontal" label="Publicidad superior" />
+
+      <section class="mt-12 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm" aria-labelledby="benefits-title">
+        <div class="border-b border-slate-200 bg-slate-50 px-6 py-7 sm:px-8">
+          <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-700">Una forma más tranquila de calcular</p>
+          <h2 id="benefits-title" class="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Información clara cuando la necesitas</h2>
+        </div>
+        <div class="grid divide-y divide-slate-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+          <article class="p-6 sm:p-8">
+            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-2xl" aria-hidden="true">🔒</div>
+            <h3 class="text-lg font-bold text-slate-900">100% privado</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">Los cálculos se procesan en tu dispositivo. No guardamos ningún dato personal.</p>
+          </article>
+          <article class="p-6 sm:p-8">
+            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-2xl" aria-hidden="true">⚡</div>
+            <h3 class="text-lg font-bold text-slate-900">Instantáneo</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">Sin registros, contraseñas ni trámites lentos con certificado digital.</p>
+          </article>
+          <article class="p-6 sm:p-8">
+            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-2xl" aria-hidden="true">⚖️</div>
+            <h3 class="text-lg font-bold text-slate-900">Leyes actualizadas</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">Parámetros adaptados a las bases y tramos legales orientativos de España para 2026.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="calculadoras" class="scroll-mt-8 pt-10" aria-labelledby="calculators-title">
+        <div class="mb-6 flex items-end justify-between gap-4">
+          <div><p class="text-sm font-bold uppercase tracking-[0.16em] text-slate-500">Herramientas disponibles</p><h2 id="calculators-title" class="mt-2 text-3xl font-black text-slate-900">Calcula con datos sencillos</h2></div>
+          <span class="hidden text-sm text-slate-500 sm:block">{calculators.length} herramientas</span>
+        </div>
+        <div class="mb-6 w-full">
+          <label for="calculator-search" class="mb-2 block text-sm font-bold text-slate-700">¿Qué necesitas calcular?</label>
+          <div class="relative"><span class="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center text-lg leading-none text-slate-400" aria-hidden="true">⌕</span><input id="calculator-search" type="search" placeholder="Busca IRPF, paro, coche, vivienda..." class="w-full rounded-xl border border-slate-300 bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100" /></div>
+          <p id="search-status" class="mt-2 text-xs text-slate-500" aria-live="polite">Mostrando {calculators.length} calculadoras</p>
+        </div>
+        <div class="grid gap-5 md:grid-cols-2" aria-label="Calculadoras disponibles">
+        {calculators.map((calculator) => {
+          const slug = calculator.id.replace(/\.md$/, '');
+          const details = cardDetails[slug];
+          return (
+          <a href={`/${slug}/`} data-calculator-card data-search={`${details.shortTitle} ${details.eyebrow} ${details.outcome} ${calculator.data.title} ${calculator.data.description} ${calculator.data.keywords.join(' ')}`} class={`group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 ${details.hoverClass} hover:shadow-lg`}>
+            <div class={`absolute right-0 top-0 h-24 w-24 rounded-bl-full ${details.blobClass} transition group-hover:scale-125`} aria-hidden="true"></div>
+            <div class="relative flex items-start justify-between gap-4"><div class={`flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-black ${details.iconClass}`} aria-hidden="true">{details.icon}</div><span class="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500">2026</span></div>
+            <p class={`relative mt-5 text-xs font-bold uppercase tracking-[0.12em] ${details.eyebrowClass}`}>{details.eyebrow}</p>
+            <h3 class="relative mt-2 text-xl font-black tracking-tight text-slate-900 group-hover:text-blue-700">{details.shortTitle}</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">{calculator.data.description}</p>
+            <div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4"><span class="text-sm font-bold text-slate-900">{details.action} <span aria-hidden="true" class="text-blue-600">→</span></span><span class="rounded-lg bg-slate-50 px-2.5 py-1.5 text-[11px] font-semibold text-slate-500">{details.outcome}</span></div>
+          </a>
+          );
+        })}
+        </div>
+        <p id="search-empty" class="mt-6 hidden rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">No hemos encontrado una calculadora con ese término. Prueba con “nómina”, “casa” o “despido”.</p>
+      </section>
+
+      <AdSlot slot="home-middle" format="rectangle" label="Publicidad entre contenidos" />
+
+      <section class="mt-12 max-w-3xl" aria-labelledby="guide-title">
+        <p class="text-sm font-bold uppercase tracking-[0.16em] text-slate-500">Guía rápida</p>
+        <h2 id="guide-title" class="mt-2 text-3xl font-black text-slate-900">¿Qué calculadora necesitas?</h2>
+        <div class="mt-5 space-y-4 text-base leading-7 text-slate-600">
+          <p>Si quieres saber cuánto cobrarás después de impuestos, empieza por la calculadora de IRPF y sueldo neto. Si estás planificando tu retiro, la calculadora de pensión relaciona tus años cotizados con una estimación mensual.</p>
+          <p>Los resultados son orientativos y sirven para preparar una conversación con tu empresa, la administración o un asesor. Comprueba siempre los datos oficiales antes de tomar decisiones económicas.</p>
+        </div>
+      </section>
+
+      <FAQSection faqs={homeFaqs} />
+      <AdSlot slot="home-bottom" format="horizontal" label="Publicidad inferior" />
+    </main>
+    <footer class="border-t border-slate-200 bg-white px-4 py-8 text-center text-sm text-slate-500"><p>© 2026 CALCULA.ES · Estimaciones informativas para España</p></footer>
+    <script>
+      const searchInput = document.querySelector<HTMLInputElement>('#calculator-search');
+      const searchStatus = document.querySelector<HTMLElement>('#search-status');
+      const emptyState = document.querySelector<HTMLElement>('#search-empty');
+      const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-calculator-card]'));
+
+      searchInput?.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLocaleLowerCase('es-ES');
+        let visibleCount = 0;
+        cards.forEach((card) => {
+          const matches = card.dataset.search?.toLocaleLowerCase('es-ES').includes(query) ?? false;
+          card.classList.toggle('hidden', !matches);
+          if (matches) visibleCount += 1;
+        });
+        if (searchStatus) searchStatus.textContent = query ? `${visibleCount} resultado${visibleCount === 1 ? '' : 's'} encontrado${visibleCount === 1 ? '' : 's'}` : `Mostrando ${cards.length} calculadoras`;
+        emptyState?.classList.toggle('hidden', visibleCount > 0);
+      });
+    </script>
+  </body>
+</html>

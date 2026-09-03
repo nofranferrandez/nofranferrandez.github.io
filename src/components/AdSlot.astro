@@ -1,0 +1,46 @@
+---
+interface Props {
+  slot: string;
+  format?: string;
+  label?: string;
+}
+
+declare global {
+  interface Window {
+    adsbygoogle?: Array<Record<string, unknown>>;
+  }
+}
+
+const { slot, format = 'auto', label = 'Publicidad' } = Astro.props;
+const client = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const slotId = slot === 'calculator-top'
+  ? import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_TOP
+  : slot === 'calculator-bottom'
+    ? import.meta.env.PUBLIC_ADSENSE_SLOT_CALCULATOR_BOTTOM
+    : slot === 'home-top'
+  ? import.meta.env.PUBLIC_ADSENSE_SLOT_HOME_TOP
+  : slot === 'home-middle'
+    ? import.meta.env.PUBLIC_ADSENSE_SLOT_HOME_MIDDLE
+    : import.meta.env.PUBLIC_ADSENSE_SLOT_HOME_BOTTOM;
+const enabled = Boolean(client && slotId);
+---
+<div class="ad-slot min-h-[90px]" aria-label={label} data-ad-position={slot} data-ad-slot={slotId}>
+  {enabled ? (
+    <>
+      <ins
+        class="adsbygoogle block min-h-[90px]"
+        style="display:block"
+        data-ad-client={client}
+        data-ad-slot={slotId}
+        data-ad-format={format}
+        data-full-width-responsive="true"
+      ></ins>
+      <script is:inline>
+        window.adsbygoogle = window.adsbygoogle || [];
+        window.adsbygoogle.push({});
+      </script>
+    </>
+  ) : (
+    <div class="flex min-h-[90px] items-center justify-center border-y border-dashed border-slate-300 text-xs text-slate-400">Espacio reservado para publicidad</div>
+  )}
+</div>

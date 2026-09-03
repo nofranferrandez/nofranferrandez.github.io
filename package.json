@@ -1,0 +1,28 @@
+{
+  "name": "calcula-es",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check:types": "astro check",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "check": "npx astro check && npm run test"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/tailwind": "latest",
+    "astro": "latest",
+    "tailwindcss": "latest",
+    "typescript": "^5.9.3",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "vitest": "^4.1.11"
+  }
+}

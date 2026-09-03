@@ -25,6 +25,22 @@
           }
         },
         {
+          "name": "Instalar dependencias",
+          "run": "npm ci"
+        },
+        {
+          "name": "Instalar navegador E2E",
+          "run": "npx playwright install --with-deps chromium"
+        },
+        {
+          "name": "Ejecutar Validación de Tipos y Tests",
+          "run": "npm run check"
+        },
+        {
+          "name": "Compilar Proyecto Astro",
+          "run": "npm run build"
+        },
+        {
           "name": "Obtener Métricas de Rendimiento",
           "run": "python scripts/fetch_metrics.py"
         },

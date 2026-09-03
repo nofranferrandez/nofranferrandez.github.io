@@ -1,0 +1,55 @@
+---
+interface Faq {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+  keywords: string[];
+  faqs: Faq[];
+  slug?: string;
+}
+
+const { title, description, category, keywords, faqs, slug } = Astro.props;
+const canonical = new URL(slug ? `/${slug}` : '/', Astro.site).toString();
+const application = {
+  '@type': 'WebApplication',
+  name: title,
+  url: canonical,
+  description,
+  applicationCategory: category,
+  operatingSystem: 'All',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+};
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [application, ...(slug ? [] : [{
+    '@type': 'WebSite',
+    name: 'CALCULA.ES',
+    url: canonical,
+    inLanguage: 'es-ES',
+  }]), ...(faqs.length > 0 ? [{
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  }] : [])],
+};
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="keywords" content={keywords.join(', ')} />
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary" />
+<script type="application/ld+json" is:inline set:html={JSON.stringify(graph)} />
