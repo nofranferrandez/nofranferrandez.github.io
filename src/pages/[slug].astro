@@ -1,119 +1,787 @@
 ---
-import { getCollection, render } from 'astro:content';
-import CalculatorLayout from '../components/CalculatorLayout.astro';
-import FAQSection from '../components/FAQSection.astro';
+import { getCollection, render } from "astro:content";
+import CalculatorLayout from "../components/CalculatorLayout.astro";
+import FAQSection from "../components/FAQSection.astro";
+import PageIntro from "../components/PageIntro.astro";
+import { calculatorThemes } from "../data/calculatorThemes";
 
 export async function getStaticPaths() {
-  const calculators = await getCollection('calculators');
-  return calculators.map((calculator) => ({ params: { slug: calculator.id.replace(/\.md$/, '') }, props: { calculator } }));
+  const calculators = await getCollection("calculators");
+  return calculators.map((calculator) => ({
+    params: { slug: calculator.id.replace(/\.md$/, "") },
+    props: { calculator },
+  }));
 }
 
 const { calculator } = Astro.props;
 const { Content } = await render(calculator);
 const { title, description, faqs } = calculator.data;
-const slug = calculator.id.replace(/\.md$/, '');
+const slug = calculator.id.replace(/\.md$/, "");
+const themeKey = slug in calculatorThemes ? slug : "irpf";
+const theme =
+  calculatorThemes[themeKey as keyof typeof calculatorThemes] ??
+  calculatorThemes.irpf;
+const buttonClass = theme.button;
 ---
+
 <CalculatorLayout calculator={calculator} slug={slug}>
   <section class="mb-8 max-w-3xl">
-    <h1 class="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">{title}</h1>
-    <p class="mt-3 max-w-2xl text-base leading-7 text-slate-600">{description}</p>
+    <PageIntro
+      title={title}
+      description={description}
+      theme={slug === "irpf"
+        ? "blue"
+        : slug === "pension"
+          ? "emerald"
+          : slug === "finiquito"
+            ? "amber"
+            : slug === "paro"
+              ? "violet"
+              : slug === "vivienda"
+                ? "rose"
+                : "slate"}
+    />
   </section>
 
-  <div class="my-6 flex min-h-[90px] items-center justify-center border-y border-dashed border-slate-300 text-xs text-slate-400" aria-label="Publicidad superior de la calculadora" data-ad-position="calculator-top">Espacio reservado para publicidad</div>
+  <div
+    class="my-6 flex min-h-[90px] items-center justify-center border-y border-dashed border-slate-300 text-xs text-slate-400"
+    aria-label="Publicidad superior de la calculadora"
+    data-ad-position="calculator-top"
+  >
+    Espacio reservado para publicidad
+  </div>
 
   <div class="grid items-start gap-8 md:items-stretch md:grid-cols-12">
-    <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-7 sm:p-8" aria-labelledby="form-title">
-      <div class="mb-6 flex items-start justify-between gap-4 border-b border-slate-100 pb-5"><div><p class="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Paso 1</p><h2 id="form-title" class="mt-1 text-xl font-bold text-slate-900">Cuéntanos un poco sobre ti</h2></div></div>
-      {slug === 'irpf' ? (
-        <form id="irpf-form" class="space-y-5">
-          <div><label for="bruto" class="mb-1 block text-sm font-medium text-slate-700">Sueldo bruto anual (€)</label><input id="bruto" name="bruto" type="number" min="1000" step="any" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Ej. 28000" /></div>
-          <div><label for="pagas" class="mb-1 block text-sm font-medium text-slate-700">Número de pagas</label><select id="pagas" name="pagas" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"><option value="12">12 pagas</option><option value="14" selected>14 pagas</option></select></div>
-          <div><label for="situacion" class="mb-1 block text-sm font-medium text-slate-700">Situación familiar</label><select id="situacion" name="situacion" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"><option value="single">Soltero/a sin hijos</option><option value="children">Con hijos a cargo</option></select></div>
-          <p id="irpf-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
-          <button class="w-full rounded-xl bg-blue-600 px-4 py-3.5 font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md" type="submit">Calcular mi retención <span aria-hidden="true">→</span></button>
-        </form>
-      ) : slug === 'pension' ? (
-        <form id="pension-form" class="space-y-5">
-          <div><label for="edad" class="mb-1 block text-sm font-medium text-slate-700">Edad actual</label><input id="edad" name="edad" type="number" min="0" inputmode="numeric" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Ej. 52" /></div>
-          <div><label for="anos" class="mb-1 block text-sm font-medium text-slate-700">Años cotizados acumulados</label><input id="anos" name="anos" type="number" min="0" step="any" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Ej. 28" /></div>
-          <div><label for="base" class="mb-1 block text-sm font-medium text-slate-700">Sueldo bruto mensual medio (€)</label><input id="base" name="base" type="number" min="1" step="any" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Ej. 2100" /></div>
-          <p id="pension-error" class="hidden text-sm font-medium text-red-700" role="alert"></p>
-          <button class="w-full rounded-xl bg-blue-600 px-4 py-3.5 font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md" type="submit">Calcular mi pensión <span aria-hidden="true">→</span></button>
-        </form>
-      ) : slug === 'coche' ? (
-        <form id="coche-form" class="space-y-5">
-          <div><label for="tipoVehiculo" class="mb-1 block text-sm font-medium text-slate-700">Tipo de vehículo</label><select id="tipoVehiculo" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"><option value="car">Coche / furgoneta / 4x4 (55,70 €)</option><option value="moped">Ciclomotor / moto hasta 50 cc (27,85 €)</option></select></div>
-          <div><label for="valorCompra" class="mb-1 block text-sm font-medium text-slate-700">Valor de compraventa (€)</label><input id="valorCompra" type="number" min="1" step="any" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" placeholder="Ej. 8500" /></div>
-          <div><label for="ccaaCoche" class="mb-1 block text-sm font-medium text-slate-700">ITP de tu comunidad (%)</label><input id="ccaaCoche" type="number" min="0" step="any" value="6" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" /></div>
-          <label class="flex items-center gap-3 text-sm text-slate-700"><input id="usarGestoria" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-blue-600" /> Incluir gestoría (+60 € aprox.)</label>
-          <p id="coche-error" class="hidden text-sm font-medium text-red-700" role="alert"></p><button class="w-full rounded-xl bg-blue-600 px-4 py-3.5 font-bold text-white shadow-sm transition hover:bg-blue-700" type="submit">Calcular transferencia <span aria-hidden="true">→</span></button>
-        </form>
-      ) : slug === 'finiquito' ? (
-        <form id="finiquito-form" class="space-y-5">
-          <div><label for="brutoAnual" class="mb-1 block text-sm font-medium text-slate-700">Salario bruto anual (€)</label><input id="brutoAnual" type="number" min="1" step="any" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" placeholder="Ej. 24000" /></div>
-          <div class="grid gap-4 sm:grid-cols-2"><div><label for="fechaInicio" class="mb-1 block text-sm font-medium text-slate-700">Fecha de inicio</label><input id="fechaInicio" type="date" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" /></div><div><label for="fechaFin" class="mb-1 block text-sm font-medium text-slate-700">Fecha de fin</label><input id="fechaFin" type="date" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" /></div></div>
-          <div><label for="motivo" class="mb-1 block text-sm font-medium text-slate-700">Motivo de extinción</label><select id="motivo" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"><option value="unfair">Despido improcedente (33 días/año)</option><option value="objective">Despido objetivo / ERE (20 días/año)</option><option value="temporary">Fin de contrato temporal (12 días/año)</option><option value="voluntary">Baja voluntaria (0 días)</option></select></div>
-          <div class="grid gap-4 sm:grid-cols-2"><div><label for="vacaciones" class="mb-1 block text-sm font-medium text-slate-700">Vacaciones pendientes</label><input id="vacaciones" type="number" min="0" step="any" value="0" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" /></div><div><label for="tipoPagas" class="mb-1 block text-sm font-medium text-slate-700">Pagas extra</label><select id="tipoPagas" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"><option value="prorated">Prorrateadas</option><option value="separate">Separadas (14 pagas)</option></select></div></div>
-          <p id="finiquito-error" class="hidden text-sm font-medium text-red-700" role="alert"></p><button class="w-full rounded-xl bg-blue-600 px-4 py-3.5 font-bold text-white shadow-sm transition hover:bg-blue-700" type="submit">Calcular finiquito <span aria-hidden="true">→</span></button>
-        </form>
-      ) : slug === 'paro' ? (
-        <form id="paro-form" class="space-y-5">
-          <div><label for="baseCotizacion" class="mb-1 block text-sm font-medium text-slate-700">Base reguladora media (€/mes)</label><input id="baseCotizacion" type="number" min="1" step="any" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" placeholder="Ej. 1850" /></div>
-          <div><label for="diasCotizados" class="mb-1 block text-sm font-medium text-slate-700">Días cotizados en los últimos 6 años</label><input id="diasCotizados" type="number" min="360" step="1" value="2160" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" /></div>
-          <div><label for="hijos" class="mb-1 block text-sm font-medium text-slate-700">Hijos a cargo</label><select id="hijos" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"><option value="0">Sin hijos</option><option value="1">1 hijo</option><option value="2">2 o más hijos</option></select></div>
-          <p id="paro-error" class="hidden text-sm font-medium text-red-700" role="alert"></p><button class="w-full rounded-xl bg-blue-600 px-4 py-3.5 font-bold text-white shadow-sm transition hover:bg-blue-700" type="submit">Calcular mi prestación <span aria-hidden="true">→</span></button>
-        </form>
-      ) : (
-        <form id="vivienda-form" class="space-y-5">
-          <div><label for="precio" class="mb-1 block text-sm font-medium text-slate-700">Precio de la vivienda (€)</label><input id="precio" type="number" min="1" step="any" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" placeholder="Ej. 180000" /></div>
-          <div><label for="tipoVivienda" class="mb-1 block text-sm font-medium text-slate-700">Tipo de vivienda</label><select id="tipoVivienda" class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"><option value="used">Segunda mano (ITP)</option><option value="new">Obra nueva (IVA + AJD)</option></select></div>
-          <div><label for="itpRate" class="mb-1 block text-sm font-medium text-slate-700">ITP de tu comunidad (%)</label><input id="itpRate" type="number" min="0" step="any" value="10" required class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900" /></div>
-          <label class="flex items-center gap-3 text-sm text-slate-700"><input id="joven" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-blue-600" /> Soy menor de 35 años</label>
-          <p id="vivienda-error" class="hidden text-sm font-medium text-red-700" role="alert"></p><button class="w-full rounded-xl bg-blue-600 px-4 py-3.5 font-bold text-white shadow-sm transition hover:bg-blue-700" type="submit">Calcular gastos <span aria-hidden="true">→</span></button>
-        </form>
-      )}
+    <section
+      class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-7 sm:p-8"
+      aria-labelledby="form-title"
+    >
+      <div
+        class="mb-6 flex items-start justify-between gap-4 border-b border-slate-100 pb-5"
+      >
+        <div>
+          <p
+            class="text-xs font-bold uppercase tracking-[0.14em] text-slate-400"
+          >
+            Paso 1
+          </p><h2 id="form-title" class="mt-1 text-xl font-bold text-slate-900">
+            Cuéntanos un poco sobre ti
+          </h2>
+        </div>
+      </div>
+      {
+        slug === "irpf" ? (
+          <form id="irpf-form" class="space-y-5">
+            <div>
+              <>
+                <label
+                  for="bruto"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Sueldo bruto anual (€)
+                </label>
+                <input
+                  id="bruto"
+                  name="bruto"
+                  type="number"
+                  min="1000"
+                  step="any"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="Ej. 28000"
+                />
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="pagas"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Número de pagas
+                </label>
+                <select
+                  id="pagas"
+                  name="pagas"
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >
+                  <>
+                    <option value="12">12 pagas</option>
+                    <option value="14" selected>
+                      14 pagas
+                    </option>
+                  </>
+                </select>
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="situacion"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Situación familiar
+                </label>
+                <select
+                  id="situacion"
+                  name="situacion"
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >
+                  <>
+                    <option value="single">Soltero/a sin hijos</option>
+                    <option value="children">Con hijos a cargo</option>
+                  </>
+                </select>
+              </>
+            </div>
+            <p
+              id="irpf-error"
+              class="hidden text-sm font-medium text-red-700"
+              role="alert"
+            />
+            <button
+              class={`w-full rounded-xl ${buttonClass} px-4 py-3.5 font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md`}
+              type="submit"
+            >
+              Calcular mi retención <span aria-hidden="true">→</span>
+            </button>
+          </form>
+        ) : slug === "pension" ? (
+          <form id="pension-form" class="space-y-5">
+            <div>
+              <>
+                <label
+                  for="edad"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Edad actual
+                </label>
+                <input
+                  id="edad"
+                  name="edad"
+                  type="number"
+                  min="0"
+                  inputmode="numeric"
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="Ej. 52"
+                />
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="anos"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Años cotizados acumulados
+                </label>
+                <input
+                  id="anos"
+                  name="anos"
+                  type="number"
+                  min="0"
+                  step="any"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="Ej. 28"
+                />
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="base"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Sueldo bruto mensual medio (€)
+                </label>
+                <input
+                  id="base"
+                  name="base"
+                  type="number"
+                  min="1"
+                  step="any"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="Ej. 2100"
+                />
+              </>
+            </div>
+            <p
+              id="pension-error"
+              class="hidden text-sm font-medium text-red-700"
+              role="alert"
+            />
+            <button
+              class={`w-full rounded-xl ${buttonClass} px-4 py-3.5 font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md`}
+              type="submit"
+            >
+              Calcular mi pensión <span aria-hidden="true">→</span>
+            </button>
+          </form>
+        ) : slug === "coche" ? (
+          <form id="coche-form" class="space-y-5">
+            <div>
+              <>
+                <label
+                  for="tipoVehiculo"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Tipo de vehículo
+                </label>
+                <select
+                  id="tipoVehiculo"
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                >
+                  <>
+                    <option value="car">
+                      Coche / furgoneta / 4x4 (55,70 €)
+                    </option>
+                    <option value="moped">
+                      Ciclomotor / moto hasta 50 cc (27,85 €)
+                    </option>
+                  </>
+                </select>
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="valorCompra"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Valor de compraventa (€)
+                </label>
+                <input
+                  id="valorCompra"
+                  type="number"
+                  min="1"
+                  step="any"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                  placeholder="Ej. 8500"
+                />
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="ccaaCoche"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  ITP de tu comunidad (%)
+                </label>
+                <input
+                  id="ccaaCoche"
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="6"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                />
+              </>
+            </div>
+            <label class="flex items-center gap-3 text-sm text-slate-700">
+              <input
+                id="usarGestoria"
+                type="checkbox"
+                class="h-5 w-5 rounded border-slate-300 text-blue-600"
+              />{" "}
+              Incluir gestoría (+60 € aprox.)
+            </label>
+            <>
+              <p
+                id="coche-error"
+                class="hidden text-sm font-medium text-red-700"
+                role="alert"
+              />
+              <button
+                class={`w-full rounded-xl ${buttonClass} px-4 py-3.5 font-bold text-white shadow-sm transition`}
+                type="submit"
+              >
+                Calcular transferencia <span aria-hidden="true">→</span>
+              </button>
+            </>
+          </form>
+        ) : slug === "finiquito" ? (
+          <form id="finiquito-form" class="space-y-5">
+            <div>
+              <>
+                <label
+                  for="brutoAnual"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Salario bruto anual (€)
+                </label>
+                <input
+                  id="brutoAnual"
+                  type="number"
+                  min="1"
+                  step="any"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                  placeholder="Ej. 24000"
+                />
+              </>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <>
+                <div>
+                  <>
+                    <label
+                      for="fechaInicio"
+                      class="mb-1 block text-sm font-medium text-slate-700"
+                    >
+                      Fecha de inicio
+                    </label>
+                    <input
+                      id="fechaInicio"
+                      type="date"
+                      required
+                      class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                    />
+                  </>
+                </div>
+                <div>
+                  <>
+                    <label
+                      for="fechaFin"
+                      class="mb-1 block text-sm font-medium text-slate-700"
+                    >
+                      Fecha de fin
+                    </label>
+                    <input
+                      id="fechaFin"
+                      type="date"
+                      required
+                      class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                    />
+                  </>
+                </div>
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="motivo"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Motivo de extinción
+                </label>
+                <select
+                  id="motivo"
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                >
+                  <>
+                    <option value="unfair">
+                      Despido improcedente (33 días/año)
+                    </option>
+                    <option value="objective">
+                      Despido objetivo / ERE (20 días/año)
+                    </option>
+                    <option value="temporary">
+                      Fin de contrato temporal (12 días/año)
+                    </option>
+                    <option value="voluntary">Baja voluntaria (0 días)</option>
+                  </>
+                </select>
+              </>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <>
+                <div>
+                  <>
+                    <label
+                      for="vacaciones"
+                      class="mb-1 block text-sm font-medium text-slate-700"
+                    >
+                      Vacaciones pendientes
+                    </label>
+                    <input
+                      id="vacaciones"
+                      type="number"
+                      min="0"
+                      step="any"
+                      value="0"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                    />
+                  </>
+                </div>
+                <div>
+                  <>
+                    <label
+                      for="tipoPagas"
+                      class="mb-1 block text-sm font-medium text-slate-700"
+                    >
+                      Pagas extra
+                    </label>
+                    <select
+                      id="tipoPagas"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                    >
+                      <>
+                        <option value="prorated">Prorrateadas</option>
+                        <option value="separate">Separadas (14 pagas)</option>
+                      </>
+                    </select>
+                  </>
+                </div>
+              </>
+            </div>
+            <>
+              <p
+                id="finiquito-error"
+                class="hidden text-sm font-medium text-red-700"
+                role="alert"
+              />
+              <button
+                class={`w-full rounded-xl ${buttonClass} px-4 py-3.5 font-bold text-white shadow-sm transition`}
+                type="submit"
+              >
+                Calcular finiquito <span aria-hidden="true">→</span>
+              </button>
+            </>
+          </form>
+        ) : slug === "paro" ? (
+          <form id="paro-form" class="space-y-5">
+            <div>
+              <>
+                <label
+                  for="baseCotizacion"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Base reguladora media (€/mes)
+                </label>
+                <input
+                  id="baseCotizacion"
+                  type="number"
+                  min="1"
+                  step="any"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                  placeholder="Ej. 1850"
+                />
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="diasCotizados"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Días cotizados en los últimos 6 años
+                </label>
+                <input
+                  id="diasCotizados"
+                  type="number"
+                  min="360"
+                  step="1"
+                  value="2160"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                />
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="hijos"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Hijos a cargo
+                </label>
+                <select
+                  id="hijos"
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                >
+                  <>
+                    <option value="0">Sin hijos</option>
+                    <option value="1">1 hijo</option>
+                    <option value="2">2 o más hijos</option>
+                  </>
+                </select>
+              </>
+            </div>
+            <>
+              <p
+                id="paro-error"
+                class="hidden text-sm font-medium text-red-700"
+                role="alert"
+              />
+              <button
+                class={`w-full rounded-xl ${buttonClass} px-4 py-3.5 font-bold text-white shadow-sm transition`}
+                type="submit"
+              >
+                Calcular mi prestación <span aria-hidden="true">→</span>
+              </button>
+            </>
+          </form>
+        ) : (
+          <form id="vivienda-form" class="space-y-5">
+            <div>
+              <>
+                <label
+                  for="precio"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Precio de la vivienda (€)
+                </label>
+                <input
+                  id="precio"
+                  type="number"
+                  min="1"
+                  step="any"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                  placeholder="Ej. 180000"
+                />
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="tipoVivienda"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  Tipo de vivienda
+                </label>
+                <select
+                  id="tipoVivienda"
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                >
+                  <>
+                    <option value="used">Segunda mano (ITP)</option>
+                    <option value="new">Obra nueva (IVA + AJD)</option>
+                  </>
+                </select>
+              </>
+            </div>
+            <div>
+              <>
+                <label
+                  for="itpRate"
+                  class="mb-1 block text-sm font-medium text-slate-700"
+                >
+                  ITP de tu comunidad (%)
+                </label>
+                <input
+                  id="itpRate"
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="10"
+                  required
+                  class="w-full rounded-lg border border-slate-300 px-3 py-3 text-slate-900"
+                />
+              </>
+            </div>
+            <label class="flex items-center gap-3 text-sm text-slate-700">
+              <input
+                id="joven"
+                type="checkbox"
+                class="h-5 w-5 rounded border-slate-300 text-blue-600"
+              />{" "}
+              Soy menor de 35 años
+            </label>
+            <>
+              <p
+                id="vivienda-error"
+                class="hidden text-sm font-medium text-red-700"
+                role="alert"
+              />
+              <button
+                class={`w-full rounded-xl ${buttonClass} px-4 py-3.5 font-bold text-white shadow-sm transition`}
+                type="submit"
+              >
+                Calcular gastos <span aria-hidden="true">→</span>
+              </button>
+            </>
+          </form>
+        )
+      }
     </section>
 
-    <section class="relative h-full overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 text-slate-800 shadow-sm md:col-span-5 sm:p-8" aria-live="polite" aria-labelledby="result-title">
-      <div class="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-blue-100/70" aria-hidden="true"></div>
-      <div class="relative"><p class="text-xs font-bold uppercase tracking-[0.14em] text-blue-700">Paso 2</p><h2 id="result-title" class="mt-1 text-xl font-bold text-slate-900">Tu resultado</h2>
-      <div class="my-6 flex items-center gap-3"><div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-sm" aria-hidden="true">✦</div><p class="text-sm leading-5 text-slate-600">Una estimación clara para orientarte mejor.</p></div>
-      <div id="result" class="space-y-4 text-sm text-slate-600">
-        {slug === 'irpf' ? (
-          <>
-            <div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Sueldo neto mensual</span><strong class="mt-1 block text-3xl font-black text-blue-700">0,00 €</strong><span class="text-xs text-slate-500">en 14 pagas al año</span></div>
-            <div class="grid grid-cols-2 gap-3"><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Retención efectiva</span><strong class="mt-1 block text-lg text-slate-900">0,00 %</strong></div><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">IRPF anual</span><strong class="mt-1 block text-lg text-slate-900">0,00 €</strong></div></div>
-            <p class="border-t border-blue-100 pt-4 text-sm text-slate-500">Sueldo neto anual: <strong class="text-slate-900">0,00 €</strong></p>
-          </>
-        ) : (
-          <>
-            <div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Pensión bruta estimada</span><strong class="mt-1 block text-3xl font-black text-emerald-700">0,00 € <span class="text-base font-bold">/mes</span></strong><span class="text-xs text-slate-500">estimación orientativa en 14 pagas</span></div>
-            <div class="grid grid-cols-2 gap-3"><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Base reconocida</span><strong class="mt-1 block text-lg text-slate-900">0,0%</strong></div><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Edad legal</span><strong class="mt-1 block text-sm text-slate-900">--</strong></div></div>
-            <p class="border-t border-blue-100 pt-4 text-sm text-slate-500">Pensión anual: <strong class="text-slate-900">0,00 €</strong></p>
-          </>
-        )}
-      </div></div>
+    <section
+      class={`relative h-full overflow-hidden rounded-3xl border p-6 text-slate-800 shadow-sm md:col-span-5 sm:p-8 ${theme.panel}`}
+      aria-live="polite"
+      aria-labelledby="result-title"
+    >
+      <div
+        class={`absolute right-0 top-0 h-24 w-24 rounded-bl-full ${theme.soft}`}
+        aria-hidden="true"
+      >
+      </div>
+      <div class="relative">
+        <p
+          class={`text-xs font-bold uppercase tracking-[0.14em] ${theme.eyebrow}`}
+        >
+          Paso 2
+        </p>
+        <h2 id="result-title" class="mt-1 text-xl font-bold text-slate-900">
+          Tu resultado
+        </h2>
+        <div class="my-6 flex items-center gap-3">
+          <div
+            class={`flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-sm ${theme.accent}`}
+            aria-hidden="true"
+          >
+            ✦
+          </div>
+          <p class="text-sm leading-5 text-slate-600">
+            Una estimación clara para orientarte mejor.
+          </p>
+        </div>
+        <div id="result" class="space-y-4 text-sm text-slate-600">
+          {
+            slug === "irpf" ? (
+              <>
+                <div class="rounded-2xl bg-white p-4 shadow-sm">
+                  <>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      Sueldo neto mensual
+                    </span>
+                    <strong
+                      class={`mt-1 block text-3xl font-black ${theme.accent}`}
+                    >
+                      0,00 €
+                    </strong>
+                    <span class="text-xs text-slate-500">
+                      en 14 pagas al año
+                    </span>
+                  </>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <>
+                    <div
+                      class={`rounded-xl border bg-white/70 p-3 ${theme.border}`}
+                    >
+                      <>
+                        <span class="text-xs text-slate-500">
+                          Retención efectiva
+                        </span>
+                        <strong class="mt-1 block text-lg text-slate-900">
+                          0,00 %
+                        </strong>
+                      </>
+                    </div>
+                    <div
+                      class={`rounded-xl border bg-white/70 p-3 ${theme.border}`}
+                    >
+                      <>
+                        <span class="text-xs text-slate-500">IRPF anual</span>
+                        <strong class="mt-1 block text-lg text-slate-900">
+                          0,00 €
+                        </strong>
+                      </>
+                    </div>
+                  </>
+                </div>
+                <p
+                  class={`border-t pt-4 text-sm text-slate-500 ${theme.border}`}
+                >
+                  Sueldo neto anual:{" "}
+                  <strong class="text-slate-900">0,00 €</strong>
+                </p>
+              </>
+            ) : (
+              <>
+                <div class="rounded-2xl bg-white p-4 shadow-sm">
+                  <>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      Pensión bruta estimada
+                    </span>
+                    <strong
+                      class={`mt-1 block text-3xl font-black ${theme.accent}`}
+                    >
+                      0,00 € <span class="text-base font-bold">/mes</span>
+                    </strong>
+                    <span class="text-xs text-slate-500">
+                      estimación orientativa en 14 pagas
+                    </span>
+                  </>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <>
+                    <div
+                      class={`rounded-xl border bg-white/70 p-3 ${theme.border}`}
+                    >
+                      <>
+                        <span class="text-xs text-slate-500">
+                          Base reconocida
+                        </span>
+                        <strong class="mt-1 block text-lg text-slate-900">
+                          0,0%
+                        </strong>
+                      </>
+                    </div>
+                    <div
+                      class={`rounded-xl border bg-white/70 p-3 ${theme.border}`}
+                    >
+                      <>
+                        <span class="text-xs text-slate-500">Edad legal</span>
+                        <strong class="mt-1 block text-sm text-slate-900">
+                          --
+                        </strong>
+                      </>
+                    </div>
+                  </>
+                </div>
+                <p
+                  class={`border-t pt-4 text-sm text-slate-500 ${theme.border}`}
+                >
+                  Pensión anual: <strong class="text-slate-900">0,00 €</strong>
+                </p>
+              </>
+            )
+          }
+        </div>
+      </div>
     </section>
   </div>
 
-  <div class="mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"><div class="border-b border-slate-200 bg-slate-50 px-6 py-5 sm:px-8"><p class="text-xs font-bold uppercase tracking-[0.14em] text-blue-700">Antes de calcular</p><h2 class="mt-1 text-xl font-bold text-slate-900">Cómo funciona esta estimación</h2></div><div class="prose prose-slate max-w-none px-6 py-6 text-sm sm:px-8"><Content /></div></div>
+  <div
+    class="mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+  >
+    <div class="border-b border-slate-200 bg-slate-50 px-6 py-5 sm:px-8">
+      <p class="text-xs font-bold uppercase tracking-[0.14em] text-blue-700">
+        Antes de calcular
+      </p><h2 class="mt-1 text-xl font-bold text-slate-900">
+        Cómo funciona esta estimación
+      </h2>
+    </div><div class="prose prose-slate max-w-none px-6 py-6 text-sm sm:px-8">
+      <Content />
+    </div>
+  </div>
   <FAQSection faqs={faqs} />
-  <div class="my-6 flex min-h-[90px] items-center justify-center border-y border-dashed border-slate-300 text-xs text-slate-400" aria-label="Publicidad inferior de la calculadora" data-ad-position="calculator-bottom">Espacio reservado para publicidad</div>
+  <div
+    class="my-6 flex min-h-[90px] items-center justify-center border-y border-dashed border-slate-300 text-xs text-slate-400"
+    aria-label="Publicidad inferior de la calculadora"
+    data-ad-position="calculator-bottom"
+  >
+    Espacio reservado para publicidad
+  </div>
 </CalculatorLayout>
 
 <script>
-  import { calculateIrpf } from '../utils/math/irpf';
-  import { calculatePension } from '../utils/math/pension';
-  import { calculateCarTransfer } from '../utils/math/coche';
-  import { calculateSeverance } from '../utils/math/finiquito';
-  import { calculateUnemployment } from '../utils/math/paro';
-  import { calculateHousing } from '../utils/math/vivienda';
+  import { calculateIrpf } from "../utils/math/irpf";
+  import { calculatePension } from "../utils/math/pension";
+  import { calculateCarTransfer } from "../utils/math/coche";
+  import { calculateSeverance } from "../utils/math/finiquito";
+  import { calculateUnemployment } from "../utils/math/paro";
+  import { calculateHousing } from "../utils/math/vivienda";
 
   const page = document.body;
-  const result = document.querySelector('#result');
-  const euro = (value: number) => value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
-  const finiteNumber = (value: number | undefined): number => typeof value === 'number' && Number.isFinite(value) ? value : 0;
-  const animateNumber = (element: HTMLElement | null, value: number, formatter: (number: number) => string) => {
+  const result = document.querySelector("#result");
+  const euro = (value: number) =>
+    value.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
+  const finiteNumber = (value: number | undefined): number =>
+    typeof value === "number" && Number.isFinite(value) ? value : 0;
+  const animateNumber = (
+    element: HTMLElement | null,
+    value: number,
+    formatter: (number: number) => string,
+  ) => {
     if (!element) return;
     const start = performance.now();
     const duration = 650;
@@ -127,85 +795,226 @@ const slug = calculator.id.replace(/\.md$/, '');
   };
   const error = (id: string, message: string) => {
     const element = document.querySelector<HTMLElement>(id);
-    if (element) { element.textContent = message; element.classList.remove('hidden'); }
+    if (element) {
+      element.textContent = message;
+      element.classList.remove("hidden");
+    }
   };
 
   if (page && result) {
-    const irpfForm = document.querySelector<HTMLFormElement>('#irpf-form');
-    irpfForm?.addEventListener('submit', (event) => {
+    const irpfForm = document.querySelector<HTMLFormElement>("#irpf-form");
+    irpfForm?.addEventListener("submit", (event) => {
       event.preventDefault();
-      const grossInput = document.querySelector<HTMLInputElement>('#bruto')?.valueAsNumber;
+      const grossInput =
+        document.querySelector<HTMLInputElement>("#bruto")?.valueAsNumber;
       const gross = finiteNumber(grossInput);
-      if (gross <= 0) return error('#irpf-error', 'Introduce un sueldo bruto válido.');
-      const payments = document.querySelector<HTMLSelectElement>('#pagas')?.value === '12' ? 12 : 14;
-      const familySituation = document.querySelector<HTMLSelectElement>('#situacion')?.value === 'children' ? 'children' : 'single';
-      const data = calculateIrpf({ annualGross: gross, payments, familySituation });
+      if (gross <= 0)
+        return error("#irpf-error", "Introduce un sueldo bruto válido.");
+      const payments =
+        document.querySelector<HTMLSelectElement>("#pagas")?.value === "12"
+          ? 12
+          : 14;
+      const familySituation =
+        document.querySelector<HTMLSelectElement>("#situacion")?.value ===
+        "children"
+          ? "children"
+          : "single";
+      const data = calculateIrpf({
+        annualGross: gross,
+        payments,
+        familySituation,
+      });
       result.innerHTML = `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Sueldo neto mensual</span><strong class="mt-1 block text-3xl font-black text-blue-700">${euro(data.monthlyNet)}</strong><span class="text-xs text-slate-500">en ${payments} pagas al año</span></div><div class="grid grid-cols-2 gap-3"><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Retención efectiva</span><strong class="mt-1 block text-lg text-slate-900">${data.effectiveRate.toFixed(2)} %</strong></div><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">IRPF anual</span><strong class="mt-1 block text-lg text-slate-900">${euro(data.annualWithholding)}</strong></div></div><p class="border-t border-blue-100 pt-4 text-sm text-slate-600">Sueldo neto anual: <strong class="text-slate-900">${euro(data.annualNet)}</strong></p>`;
-      animateNumber(result.querySelector('div > strong'), data.monthlyNet, euro);
-      animateNumber(result.querySelector('.grid strong'), data.effectiveRate, (value) => `${value.toFixed(2)} %`);
-      animateNumber(result.querySelectorAll<HTMLElement>('.grid strong')[1], data.annualWithholding, euro);
-      animateNumber(result.querySelector('p strong'), data.annualNet, euro);
+      animateNumber(
+        result.querySelector("div > strong"),
+        data.monthlyNet,
+        euro,
+      );
+      animateNumber(
+        result.querySelector(".grid strong"),
+        data.effectiveRate,
+        (value) => `${value.toFixed(2)} %`,
+      );
+      animateNumber(
+        result.querySelectorAll<HTMLElement>(".grid strong")[1],
+        data.annualWithholding,
+        euro,
+      );
+      animateNumber(result.querySelector("p strong"), data.annualNet, euro);
     });
 
-    const pensionForm = document.querySelector<HTMLFormElement>('#pension-form');
-    pensionForm?.addEventListener('submit', (event) => {
+    const pensionForm =
+      document.querySelector<HTMLFormElement>("#pension-form");
+    pensionForm?.addEventListener("submit", (event) => {
       event.preventDefault();
-      const monthlyGrossInput = document.querySelector<HTMLInputElement>('#base')?.valueAsNumber;
-      const yearsInput = document.querySelector<HTMLInputElement>('#anos')?.valueAsNumber;
+      const monthlyGrossInput =
+        document.querySelector<HTMLInputElement>("#base")?.valueAsNumber;
+      const yearsInput =
+        document.querySelector<HTMLInputElement>("#anos")?.valueAsNumber;
       const monthlyGross = finiteNumber(monthlyGrossInput);
       const years = finiteNumber(yearsInput);
-      if (monthlyGross <= 0) return error('#pension-error', 'Introduce un sueldo bruto mensual válido.');
-      const ageInput = document.querySelector<HTMLInputElement>('#edad')?.valueAsNumber;
+      if (monthlyGross <= 0)
+        return error(
+          "#pension-error",
+          "Introduce un sueldo bruto mensual válido.",
+        );
+      const ageInput =
+        document.querySelector<HTMLInputElement>("#edad")?.valueAsNumber;
       const age = finiteNumber(ageInput);
-      const data = calculatePension({ age, yearsContributed: years, monthlyGross });
-      result.innerHTML = data.hasEntitlement ? `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Pensión bruta estimada</span><strong class="mt-1 block text-3xl font-black text-emerald-700">${euro(data.monthlyPension)} <span class="text-base font-bold">/mes</span></strong><span class="text-xs text-slate-500">estimación orientativa en 14 pagas</span></div><div class="grid grid-cols-2 gap-3"><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Base reconocida</span><strong class="mt-1 block text-lg text-slate-900">${data.percentage.toFixed(1)}%</strong></div><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Edad legal</span><strong class="mt-1 block text-sm text-slate-900">${data.legalAge}</strong></div></div><p class="border-t border-blue-100 pt-4 text-sm text-slate-600">Pensión anual: <strong class="text-slate-900">${euro(data.annualPension)}</strong></p>` : '<div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900"><strong class="block">Todavía no hay derecho contributivo</strong><span class="mt-1 block text-sm">Necesitas al menos 15 años cotizados.</span></div><p class="text-sm text-slate-600">Pensión estimada: <strong class="text-slate-900">0,00 €/mes</strong></p>';
+      const data = calculatePension({
+        age,
+        yearsContributed: years,
+        monthlyGross,
+      });
+      result.innerHTML = data.hasEntitlement
+        ? `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Pensión bruta estimada</span><strong class="mt-1 block text-3xl font-black text-emerald-700">${euro(data.monthlyPension)} <span class="text-base font-bold">/mes</span></strong><span class="text-xs text-slate-500">estimación orientativa en 14 pagas</span></div><div class="grid grid-cols-2 gap-3"><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Base reconocida</span><strong class="mt-1 block text-lg text-slate-900">${data.percentage.toFixed(1)}%</strong></div><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Edad legal</span><strong class="mt-1 block text-sm text-slate-900">${data.legalAge}</strong></div></div><p class="border-t border-blue-100 pt-4 text-sm text-slate-600">Pensión anual: <strong class="text-slate-900">${euro(data.annualPension)}</strong></p>`
+        : '<div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900"><strong class="block">Todavía no hay derecho contributivo</strong><span class="mt-1 block text-sm">Necesitas al menos 15 años cotizados.</span></div><p class="text-sm text-slate-600">Pensión estimada: <strong class="text-slate-900">0,00 €/mes</strong></p>';
       if (data.hasEntitlement) {
-        animateNumber(result.querySelector('div > strong'), data.monthlyPension, (value) => `${euro(value)} /mes`);
-        animateNumber(result.querySelector('.grid strong'), data.percentage, (value) => `${value.toFixed(1)}%`);
-        animateNumber(result.querySelector('p strong'), data.annualPension, euro);
+        animateNumber(
+          result.querySelector("div > strong"),
+          data.monthlyPension,
+          (value) => `${euro(value)} /mes`,
+        );
+        animateNumber(
+          result.querySelector(".grid strong"),
+          data.percentage,
+          (value) => `${value.toFixed(1)}%`,
+        );
+        animateNumber(
+          result.querySelector("p strong"),
+          data.annualPension,
+          euro,
+        );
       }
     });
 
-    const cocheForm = document.querySelector<HTMLFormElement>('#coche-form');
-    cocheForm?.addEventListener('submit', (event) => {
+    const cocheForm = document.querySelector<HTMLFormElement>("#coche-form");
+    cocheForm?.addEventListener("submit", (event) => {
       event.preventDefault();
-      const purchaseValue = finiteNumber(document.querySelector<HTMLInputElement>('#valorCompra')?.valueAsNumber);
-      if (purchaseValue <= 0) return error('#coche-error', 'Introduce un valor de compraventa válido.');
-      const data = calculateCarTransfer({ vehicleType: document.querySelector<HTMLSelectElement>('#tipoVehiculo')?.value === 'moped' ? 'moped' : 'car', purchaseValue, itpRate: finiteNumber(document.querySelector<HTMLInputElement>('#ccaaCoche')?.valueAsNumber), includesAgency: document.querySelector<HTMLInputElement>('#usarGestoria')?.checked ?? false });
+      const purchaseValue = finiteNumber(
+        document.querySelector<HTMLInputElement>("#valorCompra")?.valueAsNumber,
+      );
+      if (purchaseValue <= 0)
+        return error(
+          "#coche-error",
+          "Introduce un valor de compraventa válido.",
+        );
+      const data = calculateCarTransfer({
+        vehicleType:
+          document.querySelector<HTMLSelectElement>("#tipoVehiculo")?.value ===
+          "moped"
+            ? "moped"
+            : "car",
+        purchaseValue,
+        itpRate: finiteNumber(
+          document.querySelector<HTMLInputElement>("#ccaaCoche")?.valueAsNumber,
+        ),
+        includesAgency:
+          document.querySelector<HTMLInputElement>("#usarGestoria")?.checked ??
+          false,
+      });
       result.innerHTML = `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Coste total estimado</span><strong class="mt-1 block text-3xl font-black text-blue-700">${euro(data.total)}</strong><span class="text-xs text-slate-500">transferencia de vehículo</span></div><div class="space-y-3 rounded-2xl border border-blue-100 bg-white/70 p-4 text-sm"><p class="flex justify-between gap-4"><span>Impuesto ITP</span><strong>${euro(data.itp)}</strong></p><p class="flex justify-between gap-4"><span>Tasa oficial DGT</span><strong>${euro(data.dgtFee)}</strong></p><p class="flex justify-between gap-4"><span>Gestoría</span><strong>${euro(data.agency)}</strong></p></div>`;
-      animateNumber(result.querySelector('div > strong'), data.total, euro);
+      animateNumber(result.querySelector("div > strong"), data.total, euro);
     });
 
-    const finiquitoForm = document.querySelector<HTMLFormElement>('#finiquito-form');
-    finiquitoForm?.addEventListener('submit', (event) => {
+    const finiquitoForm =
+      document.querySelector<HTMLFormElement>("#finiquito-form");
+    finiquitoForm?.addEventListener("submit", (event) => {
       event.preventDefault();
-      const annualGross = finiteNumber(document.querySelector<HTMLInputElement>('#brutoAnual')?.valueAsNumber);
-      const startDate = document.querySelector<HTMLInputElement>('#fechaInicio')?.value ?? '';
-      const endDate = document.querySelector<HTMLInputElement>('#fechaFin')?.value ?? '';
-      if (annualGross <= 0 || !startDate || !endDate || new Date(endDate) <= new Date(startDate)) return error('#finiquito-error', 'Introduce un sueldo y unas fechas válidas.');
-      const data = calculateSeverance({ annualGross, startDate, endDate, reason: (document.querySelector<HTMLSelectElement>('#motivo')?.value ?? 'objective') as 'unfair' | 'objective' | 'temporary' | 'voluntary', vacationDays: finiteNumber(document.querySelector<HTMLInputElement>('#vacaciones')?.valueAsNumber), extraPayments: document.querySelector<HTMLSelectElement>('#tipoPagas')?.value === 'separate' ? 'separate' : 'prorated' });
+      const annualGross = finiteNumber(
+        document.querySelector<HTMLInputElement>("#brutoAnual")?.valueAsNumber,
+      );
+      const startDate =
+        document.querySelector<HTMLInputElement>("#fechaInicio")?.value ?? "";
+      const endDate =
+        document.querySelector<HTMLInputElement>("#fechaFin")?.value ?? "";
+      if (
+        annualGross <= 0 ||
+        !startDate ||
+        !endDate ||
+        new Date(endDate) <= new Date(startDate)
+      )
+        return error(
+          "#finiquito-error",
+          "Introduce un sueldo y unas fechas válidas.",
+        );
+      const data = calculateSeverance({
+        annualGross,
+        startDate,
+        endDate,
+        reason: (document.querySelector<HTMLSelectElement>("#motivo")?.value ??
+          "objective") as "unfair" | "objective" | "temporary" | "voluntary",
+        vacationDays: finiteNumber(
+          document.querySelector<HTMLInputElement>("#vacaciones")
+            ?.valueAsNumber,
+        ),
+        extraPayments:
+          document.querySelector<HTMLSelectElement>("#tipoPagas")?.value ===
+          "separate"
+            ? "separate"
+            : "prorated",
+      });
       result.innerHTML = `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total estimado a recibir</span><strong class="mt-1 block text-3xl font-black text-blue-700">${euro(data.total)}</strong><span class="text-xs text-slate-500">${data.yearsWorked.toFixed(2)} años · ${data.daysWorked} días</span></div><div class="space-y-3 rounded-2xl border border-blue-100 bg-white/70 p-4 text-sm"><p class="flex justify-between gap-4"><span>Indemnización</span><strong>${euro(data.severance)}</strong></p><p class="flex justify-between gap-4"><span>Vacaciones</span><strong>${euro(data.vacationPay)}</strong></p><p class="flex justify-between gap-4"><span>Pagas extra</span><strong>${euro(data.extraPay)}</strong></p></div>`;
-      animateNumber(result.querySelector('div > strong'), data.total, euro);
+      animateNumber(result.querySelector("div > strong"), data.total, euro);
     });
 
-    const paroForm = document.querySelector<HTMLFormElement>('#paro-form');
-    paroForm?.addEventListener('submit', (event) => {
+    const paroForm = document.querySelector<HTMLFormElement>("#paro-form");
+    paroForm?.addEventListener("submit", (event) => {
       event.preventDefault();
-      const contributionBase = finiteNumber(document.querySelector<HTMLInputElement>('#baseCotizacion')?.valueAsNumber);
-      if (contributionBase <= 0) return error('#paro-error', 'Introduce una base de cotización válida.');
-      const data = calculateUnemployment({ contributionBase, contributionDays: finiteNumber(document.querySelector<HTMLInputElement>('#diasCotizados')?.valueAsNumber), dependents: Math.min(finiteNumber(Number(document.querySelector<HTMLSelectElement>('#hijos')?.value)) as 2, 2) as 0 | 1 | 2 });
-      result.innerHTML = `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Prestación estimada</span><strong class="mt-1 block text-3xl font-black text-blue-700">${euro(data.firstPhase)} <span class="text-base">/mes</span></strong><span class="text-xs text-slate-500">durante los primeros 180 días</span></div><div class="grid grid-cols-2 gap-3"><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Desde el día 181</span><strong class="mt-1 block text-lg text-slate-900">${euro(data.secondPhase)}</strong></div><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Duración</span><strong class="mt-1 block text-lg text-slate-900">${data.months} meses</strong></div></div>${data.capped ? '<p class="rounded-xl bg-amber-50 p-3 text-xs text-amber-900">El importe está ajustado a los topes legales orientativos.</p>' : ''}`;
-      animateNumber(result.querySelector('div > strong'), data.firstPhase, (value) => `${euro(value)} /mes`);
+      const contributionBase = finiteNumber(
+        document.querySelector<HTMLInputElement>("#baseCotizacion")
+          ?.valueAsNumber,
+      );
+      if (contributionBase <= 0)
+        return error("#paro-error", "Introduce una base de cotización válida.");
+      const data = calculateUnemployment({
+        contributionBase,
+        contributionDays: finiteNumber(
+          document.querySelector<HTMLInputElement>("#diasCotizados")
+            ?.valueAsNumber,
+        ),
+        dependents: Math.min(
+          finiteNumber(
+            Number(document.querySelector<HTMLSelectElement>("#hijos")?.value),
+          ) as 2,
+          2,
+        ) as 0 | 1 | 2,
+      });
+      result.innerHTML = `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Prestación estimada</span><strong class="mt-1 block text-3xl font-black text-blue-700">${euro(data.firstPhase)} <span class="text-base">/mes</span></strong><span class="text-xs text-slate-500">durante los primeros 180 días</span></div><div class="grid grid-cols-2 gap-3"><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Desde el día 181</span><strong class="mt-1 block text-lg text-slate-900">${euro(data.secondPhase)}</strong></div><div class="rounded-xl border border-blue-100 bg-white/70 p-3"><span class="text-xs text-slate-500">Duración</span><strong class="mt-1 block text-lg text-slate-900">${data.months} meses</strong></div></div>${data.capped ? '<p class="rounded-xl bg-amber-50 p-3 text-xs text-amber-900">El importe está ajustado a los topes legales orientativos.</p>' : ""}`;
+      animateNumber(
+        result.querySelector("div > strong"),
+        data.firstPhase,
+        (value) => `${euro(value)} /mes`,
+      );
     });
 
-    const viviendaForm = document.querySelector<HTMLFormElement>('#vivienda-form');
-    viviendaForm?.addEventListener('submit', (event) => {
+    const viviendaForm =
+      document.querySelector<HTMLFormElement>("#vivienda-form");
+    viviendaForm?.addEventListener("submit", (event) => {
       event.preventDefault();
-      const price = finiteNumber(document.querySelector<HTMLInputElement>('#precio')?.valueAsNumber);
-      if (price <= 0) return error('#vivienda-error', 'Introduce un precio de vivienda válido.');
-      const data = calculateHousing({ price, propertyType: document.querySelector<HTMLSelectElement>('#tipoVivienda')?.value === 'new' ? 'new' : 'used', itpRate: finiteNumber(document.querySelector<HTMLInputElement>('#itpRate')?.valueAsNumber), youngBuyer: document.querySelector<HTMLInputElement>('#joven')?.checked ?? false });
+      const price = finiteNumber(
+        document.querySelector<HTMLInputElement>("#precio")?.valueAsNumber,
+      );
+      if (price <= 0)
+        return error(
+          "#vivienda-error",
+          "Introduce un precio de vivienda válido.",
+        );
+      const data = calculateHousing({
+        price,
+        propertyType:
+          document.querySelector<HTMLSelectElement>("#tipoVivienda")?.value ===
+          "new"
+            ? "new"
+            : "used",
+        itpRate: finiteNumber(
+          document.querySelector<HTMLInputElement>("#itpRate")?.valueAsNumber,
+        ),
+        youngBuyer:
+          document.querySelector<HTMLInputElement>("#joven")?.checked ?? false,
+      });
       result.innerHTML = `<div class="rounded-2xl bg-white p-4 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">Gastos adicionales estimados</span><strong class="mt-1 block text-3xl font-black text-blue-700">${euro(data.total)}</strong><span class="text-xs text-slate-500">un ${data.percentage.toFixed(1)}% sobre la vivienda</span></div><div class="space-y-3 rounded-2xl border border-blue-100 bg-white/70 p-4 text-sm"><p class="flex justify-between gap-4"><span>${data.taxLabel}</span><strong>${euro(data.tax)}</strong></p><p class="flex justify-between gap-4"><span>Notaría</span><strong>${euro(data.notary)}</strong></p><p class="flex justify-between gap-4"><span>Registro</span><strong>${euro(data.registry)}</strong></p><p class="flex justify-between gap-4"><span>Gestoría</span><strong>${euro(data.agency)}</strong></p></div>`;
-      animateNumber(result.querySelector('div > strong'), data.total, euro);
+      animateNumber(result.querySelector("div > strong"), data.total, euro);
     });
   }
 </script>
